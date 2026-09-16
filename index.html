@@ -23,6 +23,8 @@
     overflow: hidden;
     height: 100%;
     width: 100%;
+    position: fixed;
+    touch-action: none;
   }
 
   /* Ruangan lorong dengan perspective dari dalam */
@@ -46,7 +48,7 @@
     will-change: transform;
   }
 
-  /* Setiap foto = plane di dinding lorong — UKURAN LEBIH BESAR */
+  /* Setiap foto = plane di dinding lorong */
   .photo {
     position: absolute;
     width: 420px;
@@ -72,7 +74,6 @@
     transition: opacity 0.3s ease;
   }
 
-  /* Efek glow overlay */
   .photo::after {
     content: '';
     position: absolute;
@@ -85,7 +86,7 @@
     pointer-events: none;
   }
 
-  /* ===== LORONG (dinding & lantai) ===== */
+  /* ===== LORONG ===== */
   .corridor {
     position: absolute;
     top: 50%;
@@ -94,14 +95,12 @@
     pointer-events: none;
   }
 
-  /* Garis dinding lorong */
   .wall-line {
     position: absolute;
     background: rgba(0, 200, 255, 0.15);
     box-shadow: 0 0 10px rgba(0,200,255,0.3);
   }
 
-  /* Lantai grid */
   .floor-line {
     position: absolute;
     background: rgba(0, 200, 255, 0.2);
@@ -110,7 +109,6 @@
     left: -1000px;
   }
 
-  /* Vignette */
   #vignette {
     position: fixed;
     inset: 0;
@@ -120,7 +118,7 @@
   }
 
   /* ===================================================== */
-  /* ====== JUDUL OVERLAY — ADE KAKA BAKU SAYANG ========= */
+  /* ====== JUDUL OVERLAY ================================ */
   /* ===================================================== */
   #titleOverlay {
     position: fixed;
@@ -132,6 +130,8 @@
     text-align: center;
     animation: titleFadeIn 1.5s ease-out forwards;
     opacity: 0;
+    width: 100%;
+    padding: 0 12px;
   }
 
   @keyframes titleFadeIn {
@@ -149,7 +149,7 @@
     padding: 14px 36px;
     box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.6),
                 0 0 25px rgba(6, 182, 212, 0.25);
-    max-width: 92vw;
+    max-width: 100%;
   }
 
   #titleOverlay h1 {
@@ -183,7 +183,7 @@
   }
 
   /* ===================================================== */
-  /* ====== LANGIT BINTANG — 6 LAYER PARALLAX ============ */
+  /* ====== LANGIT BINTANG =============================== */
   /* ===================================================== */
   #starfield {
     position: fixed;
@@ -352,7 +352,7 @@
   }
 
   /* ===================================================== */
-  /* ====== TOMBOL MUSIK — KIRI BAWAH ==================== */
+  /* ====== TOMBOL MUSIK ================================= */
   /* ===================================================== */
   #musicBtn {
     position: fixed;
@@ -544,74 +544,79 @@
   /* Tablet */
   @media (max-width: 768px) {
     .photo {
-      width: 300px;
-      height: 375px;
-      margin-left: -150px;
-      margin-top: -187px;
+      width: 320px;
+      height: 400px;
+      margin-left: -160px;
+      margin-top: -200px;
       border-width: 3px;
     }
-    #scene { perspective: 700px; }
+    #scene { perspective: 650px; }
 
     #titleOverlay { top: 18px; }
-    #titleOverlay .title-pill { padding: 10px 24px; border-radius: 40px; }
-    #titleOverlay h1 { font-size: 1.2rem; letter-spacing: 2px; }
+    #titleOverlay .title-pill { padding: 11px 26px; border-radius: 40px; }
+    #titleOverlay h1 { font-size: 1.25rem; letter-spacing: 2px; }
   }
 
   /* HP / Mobile */
   @media (max-width: 480px) {
     .photo {
-      width: 240px;
-      height: 300px;
-      margin-left: -120px;
-      margin-top: -150px;
+      width: 280px;
+      height: 350px;
+      margin-left: -140px;
+      margin-top: -175px;
       border-width: 3px;
-      border-radius: 8px;
+      border-radius: 10px;
     }
-    #scene { perspective: 600px; }
+    #scene { perspective: 550px; }
 
-    #titleOverlay { top: 14px; }
+    #titleOverlay { top: 14px; padding: 0 10px; }
     #titleOverlay .title-pill {
-      padding: 8px 18px;
+      padding: 9px 20px;
       border-radius: 30px;
     }
     #titleOverlay h1 {
-      font-size: 1rem;
+      font-size: 1.05rem;
       letter-spacing: 1.5px;
       white-space: normal;
     }
 
     #musicBtn {
-      width: 46px; height: 46px;
+      width: 48px; height: 48px;
       bottom: 15px; left: 15px;
     }
-    #musicBtn .music-icon { font-size: 1rem; }
+    #musicBtn .music-icon { font-size: 1.05rem; }
     #replay {
-      padding: 10px 18px;
-      font-size: 0.75rem;
+      padding: 11px 20px;
+      font-size: 0.78rem;
       bottom: 15px; right: 15px;
     }
+
+    #loading p { font-size: 11px; letter-spacing: 3px; }
+    #load-percent { font-size: 24px; }
+    .loader-ring { width: 60px; height: 60px; }
   }
 
   /* HP sangat kecil */
   @media (max-width: 360px) {
     .photo {
-      width: 200px;
-      height: 250px;
-      margin-left: -100px;
-      margin-top: -125px;
+      width: 240px;
+      height: 300px;
+      margin-left: -120px;
+      margin-top: -150px;
     }
-    #titleOverlay h1 { font-size: 0.85rem; letter-spacing: 1px; }
+    #titleOverlay h1 { font-size: 0.9rem; letter-spacing: 1px; }
+    #titleOverlay .title-pill { padding: 8px 16px; }
   }
 
   /* Orientasi landscape di HP */
   @media (max-width: 900px) and (orientation: landscape) {
     .photo {
-      width: 220px;
-      height: 275px;
-      margin-left: -110px;
-      margin-top: -137px;
+      width: 240px;
+      height: 300px;
+      margin-left: -120px;
+      margin-top: -150px;
     }
-    #scene { perspective: 600px; }
+    #scene { perspective: 550px; }
     #titleOverlay { top: 10px; }
     #titleOverlay h1 { font-size: 0.9rem; }
     #titleOverlay .title-pill { padding: 6px 16px; }
@@ -684,17 +689,19 @@
 
   const TOTAL = 22;
 
-  // ===== KONFIGURASI LORONG =====
+  // ===== DETEKSI MOBILE =====
+  const isMobileDevice = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  const isSmallScreen = window.innerWidth <= 480;
+
+  // ===== KONFIGURASI LORONG (DINAMIS) =====
   const CONFIG = {
-    spacing: 800,
+    spacing: isSmallScreen ? 750 : 800,
     get totalDistance() { return this.spacing * TOTAL; },
-    // KECEPATAN KAMERA LEBIH PELAN (45 detik)
     duration: 45000,
     cameraStartZ: 600,
-    corridorHalfWidth: 360,
+    corridorHalfWidth: isSmallScreen ? 260 : 360,
     photoY: 0,
-    // Sudut foto lebih menghadap kamera
-    photoAngle: 30
+    photoAngle: isSmallScreen ? 25 : 30
   };
 
   // ===== DOM =====
@@ -714,7 +721,7 @@
     shuffledOrder: []
   };
 
-  // ===== FUNGSI SHUFFLE (FISHER-YATES) =====
+  // ===== FUNGSI SHUFFLE =====
   function shuffleArray(arr) {
     const a = arr.slice();
     for (let i = a.length - 1; i > 0; i--) {
@@ -724,13 +731,13 @@
     return a;
   }
 
-  // ===== BUAT URUTAN FOTO (1-22) =====
+  // ===== BUAT URUTAN FOTO =====
   const photoNumbers = [];
   for (let i = 1; i <= TOTAL; i++) {
     photoNumbers.push(i);
   }
 
-  // ===== BUAT FOTO DI DINDING LORONG =====
+  // ===== BUAT FOTO =====
   for (let i = 0; i < TOTAL; i++) {
     const div = document.createElement('div');
     div.className = 'photo';
@@ -738,8 +745,6 @@
     const img = document.createElement('img');
     img.alt = `Foto ${i + 1}`;
     img.loading = 'eager';
-
-    // Placeholder awal (akan diisi setelah shuffle)
     img.src = `kuara-${i + 1}.jpg`;
 
     div.appendChild(img);
@@ -749,7 +754,6 @@
     const z = -i * CONFIG.spacing;
     const x = side * CONFIG.corridorHalfWidth;
     const y = CONFIG.photoY;
-    // FOTO LEBIH MENGHADAP KAMERA — sudut lebih kecil
     const rotY = side === -1 ? CONFIG.photoAngle : -CONFIG.photoAngle;
 
     state.photos.push({
@@ -764,24 +768,19 @@
     });
   }
 
-  // ===== PASANG FOTO DI POSISI TETAP =====
+  // ===== PASANG FOTO =====
   state.photos.forEach(p => {
     p.el.style.transform =
       `translate3d(${p.x}px, ${p.y}px, ${p.z}px) rotateY(${p.rotY}deg)`;
     p.el.style.opacity = 1;
   });
 
-  // ===== FUNGSI UNTUK MENGACAK FOTO =====
+  // ===== FUNGSI SHUFFLE FOTO =====
   function shufflePhotos() {
-    // Acak urutan nomor foto
     state.shuffledOrder = shuffleArray(photoNumbers);
-
-    // Terapkan ke setiap foto
     state.photos.forEach((p, i) => {
       const photoNum = state.shuffledOrder[i];
       const newSrc = `kuara-${photoNum}.jpg`;
-
-      // Fade out -> ganti src -> fade in
       p.img.style.opacity = '0';
       setTimeout(() => {
         p.img.src = newSrc;
@@ -790,9 +789,8 @@
     });
   }
 
-  // ===== PRELOAD FOTO =====
+  // ===== PRELOAD =====
   function preloadPhotos() {
-    // Preload semua foto terlebih dahulu
     let loaded = 0;
     const totalToLoad = TOTAL;
 
@@ -814,7 +812,7 @@
     }
   }
 
-  // ===== GARIS LANTAI LORONG =====
+  // ===== GARIS LORONG =====
   const floorGroup = document.createElement('div');
   floorGroup.className = 'corridor';
   world.appendChild(floorGroup);
@@ -848,7 +846,7 @@
     floorGroup.appendChild(lineR);
   }
 
-  // ===== ANIMASI UTAMA =====
+  // ===== ANIMASI =====
   function animate(timestamp) {
     if (!state.startTime) state.startTime = timestamp;
     const elapsed = timestamp - state.startTime;
@@ -872,16 +870,13 @@
     state.animationId = requestAnimationFrame(animate);
   }
 
-  // ===== REPLAY — ACAK ULANG FOTO =====
   replayBtn.addEventListener('click', () => {
-    // Acak ulang foto setiap replay
     shufflePhotos();
-    // Mulai animasi setelah delay singkat
     setTimeout(startAnimation, 400);
   });
 
   // =================================================================
-  // 🎵 MUSIK ON/OFF
+  // 🎵 MUSIK
   // =================================================================
   const musicBtn = document.getElementById('musicBtn');
   const bgMusic = document.getElementById('bgMusic');
@@ -908,7 +903,7 @@
   });
 
   // =================================================================
-  // ✨ PARTIKEL "LOVE YOU"
+  // ✨ PARTIKEL LOVE YOU
   // =================================================================
   const lovefield = document.getElementById('lovefield');
   const WORDS = ['love you', 'Love You', 'LOVE YOU'];
@@ -1010,7 +1005,7 @@
   });
 
   // =================================================================
-  // 📱 GYROSCOPE / DEVICE ORIENTATION PARALLAX (untuk starfield)
+  // 📱 GYROSCOPE PARALLAX
   // =================================================================
   const parallaxLayers = [
     { selector: '.stars-tiny',    depth: 6  },
@@ -1025,8 +1020,6 @@
   let targetGamma = 0;
   let currentBeta = 0;
   let currentGamma = 0;
-
-  const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
   function handleOrientation(e) {
     targetBeta  = e.beta  || 0;
@@ -1061,7 +1054,7 @@
     }
   }
 
-  if (isMobile && typeof DeviceOrientationEvent !== 'undefined') {
+  if (isMobileDevice && typeof DeviceOrientationEvent !== 'undefined') {
     enableGyro();
   } else {
     window.addEventListener('mousemove', handleMouseMove);
@@ -1089,7 +1082,7 @@
 
   animateParallax();
 
-  // ===== MULAI PRELOAD =====
+  // ===== MULAI =====
   preloadPhotos();
 
 })();
