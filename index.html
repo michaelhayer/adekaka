@@ -23,10 +23,9 @@
     overflow: hidden;
     height: 100%;
     width: 100%;
-    position: fixed;
-    touch-action: none;
   }
 
+  /* Ruangan lorong dengan perspective dari dalam */
   #scene {
     position: fixed;
     inset: 0;
@@ -36,6 +35,7 @@
     z-index: 10;
   }
 
+  /* Dunia 3D tempat foto-foto terpasang */
   #world {
     position: absolute;
     top: 50%;
@@ -46,6 +46,7 @@
     will-change: transform;
   }
 
+  /* Setiap foto = plane di dinding lorong — UKURAN LEBIH BESAR */
   .photo {
     position: absolute;
     width: 420px;
@@ -59,6 +60,7 @@
       0 0 30px rgba(0, 200, 255, 0.6),
       0 0 70px rgba(0, 200, 255, 0.3);
     backface-visibility: hidden;
+    will-change: transform, opacity;
     background: #001a2e;
   }
 
@@ -70,6 +72,7 @@
     transition: opacity 0.3s ease;
   }
 
+  /* Efek glow overlay */
   .photo::after {
     content: '';
     position: absolute;
@@ -82,6 +85,7 @@
     pointer-events: none;
   }
 
+  /* ===== LORONG (dinding & lantai) ===== */
   .corridor {
     position: absolute;
     top: 50%;
@@ -90,12 +94,14 @@
     pointer-events: none;
   }
 
+  /* Garis dinding lorong */
   .wall-line {
     position: absolute;
     background: rgba(0, 200, 255, 0.15);
     box-shadow: 0 0 10px rgba(0,200,255,0.3);
   }
 
+  /* Lantai grid */
   .floor-line {
     position: absolute;
     background: rgba(0, 200, 255, 0.2);
@@ -104,6 +110,7 @@
     left: -1000px;
   }
 
+  /* Vignette */
   #vignette {
     position: fixed;
     inset: 0;
@@ -112,6 +119,9 @@
     z-index: 40;
   }
 
+  /* ===================================================== */
+  /* ====== JUDUL OVERLAY — ADE KAKA BAKU SAYANG ========= */
+  /* ===================================================== */
   #titleOverlay {
     position: fixed;
     top: 28px;
@@ -122,8 +132,6 @@
     text-align: center;
     animation: titleFadeIn 1.5s ease-out forwards;
     opacity: 0;
-    width: 100%;
-    padding: 0 12px;
   }
 
   @keyframes titleFadeIn {
@@ -141,7 +149,7 @@
     padding: 14px 36px;
     box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.6),
                 0 0 25px rgba(6, 182, 212, 0.25);
-    max-width: 100%;
+    max-width: 92vw;
   }
 
   #titleOverlay h1 {
@@ -174,6 +182,9 @@
     100% { background-position: 200% 50%; }
   }
 
+  /* ===================================================== */
+  /* ====== LANGIT BINTANG — 6 LAYER PARALLAX ============ */
+  /* ===================================================== */
   #starfield {
     position: fixed;
     inset: 0;
@@ -324,7 +335,7 @@
     white-space: nowrap;
     opacity: 0;
     text-shadow: 0 0 4px currentColor, 0 0 10px currentColor, 0 0 20px currentColor;
-    will-change: opacity;
+    will-change: opacity, transform;
   }
 
   @keyframes loveAppear {
@@ -340,6 +351,9 @@
     animation: loveAppear 1.5s ease-out forwards, loveGlow 3s ease-in-out infinite alternate 1.5s;
   }
 
+  /* ===================================================== */
+  /* ====== TOMBOL MUSIK — KIRI BAWAH ==================== */
+  /* ===================================================== */
   #musicBtn {
     position: fixed;
     bottom: 20px;
@@ -432,6 +446,9 @@
   }
   #musicBtn:hover::after { opacity: 1; }
 
+  /* ===================================================== */
+  /* ====== TOMBOL REPLAY ================================ */
+  /* ===================================================== */
   #replay {
     position: fixed;
     bottom: 20px;
@@ -467,6 +484,9 @@
     transform: scale(1.05);
   }
 
+  /* ===================================================== */
+  /* ====== LOADING ====================================== */
+  /* ===================================================== */
   #loading {
     position: fixed;
     inset: 0;
@@ -517,96 +537,81 @@
     text-shadow: 0 0 15px #0cf;
   }
 
-  /* progress bar tipis di bawah persen */
-  #load-bar {
-    width: 220px;
-    height: 4px;
-    background: rgba(0, 200, 255, 0.15);
-    border-radius: 4px;
-    overflow: hidden;
-    margin-bottom: 18px;
-  }
-  #load-bar-fill {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, #06b6d4, #10b981);
-    box-shadow: 0 0 12px rgba(6, 182, 212, 0.9);
-    transition: width 0.2s ease;
-  }
+  /* ===================================================== */
+  /* ====== RESPONSIVE — MOBILE OPTIMIZED ================ */
+  /* ===================================================== */
 
+  /* Tablet */
   @media (max-width: 768px) {
     .photo {
-      width: 320px;
-      height: 400px;
-      margin-left: -160px;
-      margin-top: -200px;
+      width: 300px;
+      height: 375px;
+      margin-left: -150px;
+      margin-top: -187px;
       border-width: 3px;
     }
-    #scene { perspective: 650px; }
+    #scene { perspective: 700px; }
 
     #titleOverlay { top: 18px; }
-    #titleOverlay .title-pill { padding: 11px 26px; border-radius: 40px; }
-    #titleOverlay h1 { font-size: 1.25rem; letter-spacing: 2px; }
+    #titleOverlay .title-pill { padding: 10px 24px; border-radius: 40px; }
+    #titleOverlay h1 { font-size: 1.2rem; letter-spacing: 2px; }
   }
 
+  /* HP / Mobile */
   @media (max-width: 480px) {
     .photo {
-      width: 280px;
-      height: 350px;
-      margin-left: -140px;
-      margin-top: -175px;
+      width: 240px;
+      height: 300px;
+      margin-left: -120px;
+      margin-top: -150px;
       border-width: 3px;
-      border-radius: 10px;
+      border-radius: 8px;
     }
-    #scene { perspective: 550px; }
+    #scene { perspective: 600px; }
 
-    #titleOverlay { top: 14px; padding: 0 10px; }
+    #titleOverlay { top: 14px; }
     #titleOverlay .title-pill {
-      padding: 9px 20px;
+      padding: 8px 18px;
       border-radius: 30px;
     }
     #titleOverlay h1 {
-      font-size: 1.05rem;
+      font-size: 1rem;
       letter-spacing: 1.5px;
       white-space: normal;
     }
 
     #musicBtn {
-      width: 48px; height: 48px;
+      width: 46px; height: 46px;
       bottom: 15px; left: 15px;
     }
-    #musicBtn .music-icon { font-size: 1.05rem; }
+    #musicBtn .music-icon { font-size: 1rem; }
     #replay {
-      padding: 11px 20px;
-      font-size: 0.78rem;
+      padding: 10px 18px;
+      font-size: 0.75rem;
       bottom: 15px; right: 15px;
     }
-
-    #loading p { font-size: 11px; letter-spacing: 3px; }
-    #load-percent { font-size: 24px; }
-    .loader-ring { width: 60px; height: 60px; }
-    #load-bar { width: 180px; }
   }
 
+  /* HP sangat kecil */
   @media (max-width: 360px) {
     .photo {
-      width: 240px;
-      height: 300px;
-      margin-left: -120px;
-      margin-top: -150px;
+      width: 200px;
+      height: 250px;
+      margin-left: -100px;
+      margin-top: -125px;
     }
-    #titleOverlay h1 { font-size: 0.9rem; letter-spacing: 1px; }
-    #titleOverlay .title-pill { padding: 8px 16px; }
+    #titleOverlay h1 { font-size: 0.85rem; letter-spacing: 1px; }
   }
 
+  /* Orientasi landscape di HP */
   @media (max-width: 900px) and (orientation: landscape) {
     .photo {
-      width: 240px;
-      height: 300px;
-      margin-left: -120px;
-      margin-top: -150px;
+      width: 220px;
+      height: 275px;
+      margin-left: -110px;
+      margin-top: -137px;
     }
-    #scene { perspective: 550px; }
+    #scene { perspective: 600px; }
     #titleOverlay { top: 10px; }
     #titleOverlay h1 { font-size: 0.9rem; }
     #titleOverlay .title-pill { padding: 6px 16px; }
@@ -620,6 +625,7 @@
 </head>
 <body>
 
+<!-- Starfield Background -->
 <div id="starfield">
   <div class="stars-tiny"></div>
   <div class="stars-small"></div>
@@ -629,20 +635,24 @@
   <div class="nebula"></div>
 </div>
 
+<!-- Love Particles -->
 <div id="lovefield"></div>
 
+<!-- ===== JUDUL OVERLAY ===== -->
 <div id="titleOverlay">
   <div class="title-pill">
     <h1 class="moving-gradient">✨ ADE KAKA BAKU SAYANG ✨</h1>
   </div>
 </div>
 
+<!-- 3D Scene -->
 <div id="scene">
   <div id="world"></div>
 </div>
 
 <div id="vignette"></div>
 
+<!-- Music Button -->
 <button id="musicBtn" data-tip="Putar Musik" title="Putar Musik">
   <span class="music-icon">🎵</span>
   <span class="wave" aria-hidden="true">
@@ -653,17 +663,19 @@
   </span>
 </button>
 
+<!-- Audio -->
 <audio id="bgMusic" loop preload="auto">
   <source src="lomba-sihir.mp3" type="audio/mpeg">
 </audio>
 
+<!-- Replay Button -->
 <button id="replay">↻ Replay</button>
 
+<!-- Loading -->
 <div id="loading">
   <div class="loader-ring"></div>
   <div id="load-percent">0%</div>
-  <div id="load-bar"><div id="load-bar-fill"></div></div>
-  <p id="load-status">Menyiapkan...</p>
+  <p>Memuat Foto</p>
 </div>
 
 <script>
@@ -672,45 +684,37 @@
 
   const TOTAL = 22;
 
-  const isMobileDevice = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-  const isSmallScreen = window.innerWidth <= 480;
-
+  // ===== KONFIGURASI LORONG =====
   const CONFIG = {
-    spacing: isSmallScreen ? 750 : 800,
+    spacing: 800,
     get totalDistance() { return this.spacing * TOTAL; },
+    // KECEPATAN KAMERA LEBIH PELAN (45 detik)
     duration: 45000,
     cameraStartZ: 600,
-    corridorHalfWidth: isSmallScreen ? 260 : 360,
+    corridorHalfWidth: 360,
     photoY: 0,
-    photoAngle: isSmallScreen ? 25 : 30
+    // Sudut foto lebih menghadap kamera
+    photoAngle: 30
   };
 
+  // ===== DOM =====
   const $ = id => document.getElementById(id);
   const scene = $('scene');
   const world = $('world');
   const loading = $('loading');
   const loadPercent = $('load-percent');
-  const loadBarFill = $('load-bar-fill');
-  const loadStatus = $('load-status');
   const replayBtn = $('replay');
 
+  // ===== STATE =====
   const state = {
     photos: [],
+    imagesLoaded: 0,
     animationId: null,
     startTime: 0,
-    isAnimating: false,
-    ready: false
+    shuffledOrder: []
   };
 
-  // ===== PROGRESS =====
-  function setProgress(pct, statusText) {
-    const p = Math.max(0, Math.min(100, Math.round(pct)));
-    loadPercent.textContent = p + '%';
-    loadBarFill.style.width = p + '%';
-    if (statusText) loadStatus.textContent = statusText;
-  }
-
-  // ===== SHUFFLE =====
+  // ===== FUNGSI SHUFFLE (FISHER-YATES) =====
   function shuffleArray(arr) {
     const a = arr.slice();
     for (let i = a.length - 1; i > 0; i--) {
@@ -720,10 +724,13 @@
     return a;
   }
 
-  // ===== BUAT FOTO =====
+  // ===== BUAT URUTAN FOTO (1-22) =====
   const photoNumbers = [];
-  for (let i = 1; i <= TOTAL; i++) photoNumbers.push(i);
+  for (let i = 1; i <= TOTAL; i++) {
+    photoNumbers.push(i);
+  }
 
+  // ===== BUAT FOTO DI DINDING LORONG =====
   for (let i = 0; i < TOTAL; i++) {
     const div = document.createElement('div');
     div.className = 'photo';
@@ -731,10 +738,9 @@
     const img = document.createElement('img');
     img.alt = `Foto ${i + 1}`;
     img.loading = 'eager';
-    img.decoding = 'async';
-    // penting: jangan set src dulu sebelum preload selesai
-    // supaya tidak ada placeholder flash
-    img.dataset.src = `kuara-${i + 1}.jpg`;
+
+    // Placeholder awal (akan diisi setelah shuffle)
+    img.src = `kuara-${i + 1}.jpg`;
 
     div.appendChild(img);
     world.appendChild(div);
@@ -743,27 +749,39 @@
     const z = -i * CONFIG.spacing;
     const x = side * CONFIG.corridorHalfWidth;
     const y = CONFIG.photoY;
+    // FOTO LEBIH MENGHADAP KAMERA — sudut lebih kecil
     const rotY = side === -1 ? CONFIG.photoAngle : -CONFIG.photoAngle;
 
     state.photos.push({
       el: div,
       img: img,
-      x, y, z, rotY
+      index: i,
+      x: x,
+      y: y,
+      z: z,
+      rotY: rotY,
+      side: side
     });
   }
 
+  // ===== PASANG FOTO DI POSISI TETAP =====
   state.photos.forEach(p => {
     p.el.style.transform =
       `translate3d(${p.x}px, ${p.y}px, ${p.z}px) rotateY(${p.rotY}deg)`;
     p.el.style.opacity = 1;
   });
 
-  // ===== SHUFFLE FOTO =====
+  // ===== FUNGSI UNTUK MENGACAK FOTO =====
   function shufflePhotos() {
-    const order = shuffleArray(photoNumbers);
+    // Acak urutan nomor foto
+    state.shuffledOrder = shuffleArray(photoNumbers);
+
+    // Terapkan ke setiap foto
     state.photos.forEach((p, i) => {
-      const photoNum = order[i];
+      const photoNum = state.shuffledOrder[i];
       const newSrc = `kuara-${photoNum}.jpg`;
+
+      // Fade out -> ganti src -> fade in
       p.img.style.opacity = '0';
       setTimeout(() => {
         p.img.src = newSrc;
@@ -772,15 +790,37 @@
     });
   }
 
-  // ===== GARIS LORONG =====
+  // ===== PRELOAD FOTO =====
+  function preloadPhotos() {
+    // Preload semua foto terlebih dahulu
+    let loaded = 0;
+    const totalToLoad = TOTAL;
+
+    for (let i = 1; i <= TOTAL; i++) {
+      const img = new Image();
+      img.onload = img.onerror = () => {
+        loaded++;
+        const pct = Math.round((loaded / totalToLoad) * 100);
+        loadPercent.textContent = pct + '%';
+        if (loaded === totalToLoad) {
+          setTimeout(() => {
+            loading.classList.add('hide');
+            shufflePhotos();
+            setTimeout(startAnimation, 400);
+          }, 300);
+        }
+      };
+      img.src = `kuara-${i}.jpg`;
+    }
+  }
+
+  // ===== GARIS LANTAI LORONG =====
   const floorGroup = document.createElement('div');
   floorGroup.className = 'corridor';
   world.appendChild(floorGroup);
 
   const floorY = 200;
-  const totalLines = TOTAL + 10;
-
-  for (let i = 0; i < totalLines; i++) {
+  for (let i = 0; i < TOTAL + 10; i++) {
     const line = document.createElement('div');
     line.className = 'floor-line';
     line.style.top = floorY + 'px';
@@ -788,7 +828,7 @@
     floorGroup.appendChild(line);
   }
 
-  for (let i = 0; i < totalLines; i++) {
+  for (let i = 0; i < TOTAL + 10; i++) {
     const lineL = document.createElement('div');
     lineL.className = 'wall-line';
     lineL.style.width = '2px';
@@ -808,7 +848,7 @@
     floorGroup.appendChild(lineR);
   }
 
-  // ===== ANIMASI =====
+  // ===== ANIMASI UTAMA =====
   function animate(timestamp) {
     if (!state.startTime) state.startTime = timestamp;
     const elapsed = timestamp - state.startTime;
@@ -820,35 +860,33 @@
     if (progress < 1) {
       state.animationId = requestAnimationFrame(animate);
     } else {
-      state.isAnimating = false;
       replayBtn.classList.add('show');
     }
   }
 
   function startAnimation() {
-    cancelAnimationFrame(state.animationId);
     replayBtn.classList.remove('show');
     state.startTime = 0;
-    state.isAnimating = true;
-    world.style.transform = `translateZ(${CONFIG.cameraStartZ}px)`;
+    world.style.transform = 'translateZ(0px)';
+    cancelAnimationFrame(state.animationId);
     state.animationId = requestAnimationFrame(animate);
   }
 
+  // ===== REPLAY — ACAK ULANG FOTO =====
   replayBtn.addEventListener('click', () => {
-    if (!state.isAnimating) {
-      shufflePhotos();
-      setTimeout(startAnimation, 400);
-    }
+    // Acak ulang foto setiap replay
+    shufflePhotos();
+    // Mulai animasi setelah delay singkat
+    setTimeout(startAnimation, 400);
   });
 
   // =================================================================
-  // 🎵 MUSIK
+  // 🎵 MUSIK ON/OFF
   // =================================================================
   const musicBtn = document.getElementById('musicBtn');
   const bgMusic = document.getElementById('bgMusic');
   const musicIcon = musicBtn.querySelector('.music-icon');
   let musicPlaying = false;
-  let gyroRequested = false;
 
   musicBtn.addEventListener('click', () => {
     if (musicPlaying) {
@@ -867,15 +905,10 @@
         musicPlaying = true;
       }).catch(err => console.warn('Autoplay diblokir:', err));
     }
-
-    if (!gyroRequested) {
-      gyroRequested = true;
-      enableGyro();
-    }
   });
 
   // =================================================================
-  // ✨ PARTIKEL LOVE YOU
+  // ✨ PARTIKEL "LOVE YOU"
   // =================================================================
   const lovefield = document.getElementById('lovefield');
   const WORDS = ['love you', 'Love You', 'LOVE YOU'];
@@ -907,7 +940,7 @@
       }
       if (tooClose) continue;
       placed.push([sx, sy]);
-      particles.push({ x: sx, y: sy, order: i });
+      particles.push({ x: sx, y: sy, order: i, kind: 'outline' });
     }
     return particles;
   }
@@ -929,7 +962,7 @@
       }
       if (tooClose) continue;
       placed.push([sx, sy]);
-      particles.push({ x: sx, y: sy, order: Math.floor(Math.random() * 320) });
+      particles.push({ x: sx, y: sy, order: Math.floor(Math.random() * 320), kind: 'fill' });
     }
     return particles;
   }
@@ -943,9 +976,7 @@
     const outline = buildOutlineParticles(nOutline);
     const fill = buildFillParticles(nFill);
 
-    const outlineSpan = outline.length
-      ? Math.max(...outline.map(p => p.order))
-      : 0;
+    const outlineSpan = outline.length ? Math.max(...outline.map(p => p.order)) : 0;
     const framesPerStep = 1.6;
     const fillStartFrame = Math.floor(outlineSpan * framesPerStep) + 30;
 
@@ -954,7 +985,6 @@
 
     const all = outline.concat(fill);
     const fontSize = isMob ? 9 : 13;
-    const fragment = document.createDocumentFragment();
 
     all.forEach(p => {
       const el = document.createElement('div');
@@ -967,10 +997,8 @@
       el.style.animationDelay = (p.delay * 16) + 'ms';
       el.style.animationDuration = (2.5 + Math.random() * 2) + 's';
       el.classList.add('fade-in');
-      fragment.appendChild(el);
+      lovefield.appendChild(el);
     });
-
-    lovefield.appendChild(fragment);
   }
 
   initLoveField();
@@ -982,22 +1010,23 @@
   });
 
   // =================================================================
-  // 📱 GYROSCOPE PARALLAX
+  // 📱 GYROSCOPE / DEVICE ORIENTATION PARALLAX (untuk starfield)
   // =================================================================
   const parallaxLayers = [
-    { el: document.querySelector('.stars-tiny'),   depth: 6  },
-    { el: document.querySelector('.stars-small'),  depth: 10 },
-    { el: document.querySelector('.stars-medium'), depth: 16 },
-    { el: document.querySelector('.stars-big'),    depth: 24 },
-    { el: document.querySelector('.stars-color'),  depth: 32 },
-    { el: document.querySelector('.nebula'),       depth: 8  },
-  ].filter(l => l.el);
+    { selector: '.stars-tiny',    depth: 6  },
+    { selector: '.stars-small',   depth: 10 },
+    { selector: '.stars-medium',  depth: 16 },
+    { selector: '.stars-big',     depth: 24 },
+    { selector: '.stars-color',   depth: 32 },
+    { selector: '.nebula',        depth: 8  },
+  ];
 
   let targetBeta = 0;
   let targetGamma = 0;
   let currentBeta = 0;
   let currentGamma = 0;
-  let gyroEnabled = false;
+
+  const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
   function handleOrientation(e) {
     targetBeta  = e.beta  || 0;
@@ -1014,26 +1043,27 @@
   }
 
   async function enableGyro() {
-    if (gyroEnabled) return;
-    if (typeof DeviceOrientationEvent === 'undefined') return;
-
+    if (typeof DeviceOrientationEvent === 'undefined') return false;
     if (typeof DeviceOrientationEvent.requestPermission === 'function') {
       try {
         const perm = await DeviceOrientationEvent.requestPermission();
         if (perm === 'granted') {
           window.addEventListener('deviceorientation', handleOrientation, true);
-          gyroEnabled = true;
+          return true;
         }
+        return false;
       } catch (err) {
-        window.addEventListener('mousemove', handleMouseMove);
+        return false;
       }
     } else {
       window.addEventListener('deviceorientation', handleOrientation, true);
-      gyroEnabled = true;
+      return true;
     }
   }
 
-  if (!isMobileDevice) {
+  if (isMobile && typeof DeviceOrientationEvent !== 'undefined') {
+    enableGyro();
+  } else {
     window.addEventListener('mousemove', handleMouseMove);
   }
 
@@ -1045,167 +1075,22 @@
     const b = Math.max(-maxTilt, Math.min(maxTilt, currentBeta));
     const g = Math.max(-maxTilt, Math.min(maxTilt, currentGamma));
 
-    for (let i = 0; i < parallaxLayers.length; i++) {
-      const layer = parallaxLayers[i];
+    parallaxLayers.forEach(layer => {
+      const el = document.querySelector(layer.selector);
+      if (!el) return;
       const d = layer.depth;
       const tx = (-g / 90) * d;
       const ty = (-b / 90) * d;
-      layer.el.style.transform = `translate3d(${tx}px, ${ty}px, 0)`;
-    }
+      el.style.transform = `translate3d(${tx}px, ${ty}px, 0)`;
+    });
 
     requestAnimationFrame(animateParallax);
   }
 
   animateParallax();
 
-  // =================================================================
-  // 🚀 PRELOAD SEMUA ASET LALU JALANKAN
-  // =================================================================
-  // Tahapan:
-  //   1. Font siap ............................. 0%  - 10%
-  //   2. Foto 1..22 di-preload + decode ........ 10% - 85%
-  //   3. Isi src semua <img> yang sudah ada .... 85% - 92%
-  //   4. Audio siap ............................ 92% - 97%
-  //   5. Warm-up render 2 frame ................ 97% - 100%
-  //   6. Baru jalankan animasi + shuffle foto
-  // =================================================================
-  function preloadAll() {
-    let finished = false;
-
-    const finish = () => {
-      if (finished) return;
-      finished = true;
-
-      setProgress(100, 'Siap!');
-
-      // sedikit delay supaya progress 100% terlihat
-      setTimeout(() => {
-        loading.classList.add('hide');
-
-        // Pasang src sebenarnya ke semua <img> di DOM
-        // (sebelumnya hanya di dataset, jadi tidak ada flash placeholder)
-        state.photos.forEach(p => {
-          p.img.src = p.img.dataset.src;
-        });
-
-        // Tunggu 2 frame render supaya layout stabil
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            shufflePhotos();
-            setTimeout(() => {
-              startAnimation();
-              state.ready = true;
-            }, 400);
-          });
-        });
-      }, 350);
-    };
-
-    // Failsafe total: 20 detik
-    const failsafe = setTimeout(() => {
-      console.warn('Failsafe: memaksa start setelah 20 detik');
-      finish();
-    }, 20000);
-
-    // ---------- 1. FONT ----------
-    setProgress(2, 'Memuat font...');
-
-    const fontPromise = (document.fonts && document.fonts.ready)
-      ? document.fonts.ready
-      : Promise.resolve();
-
-    fontPromise.then(() => {
-      setProgress(10, 'Font siap. Memuat foto...');
-      preloadImages();
-    }).catch(() => {
-      setProgress(10, 'Font dilewati. Memuat foto...');
-      preloadImages();
-    });
-
-    // ---------- 2. FOTO ----------
-    function preloadImages() {
-      let loaded = 0;
-      const startPct = 10;
-      const endPct = 85;
-      const span = endPct - startPct;
-
-      const done = () => {
-        loaded++;
-        const pct = startPct + (loaded / TOTAL) * span;
-        setProgress(pct, `Memuat foto ${loaded}/${TOTAL}...`);
-        if (loaded === TOTAL) {
-          setProgress(85, 'Semua foto siap. Menyiapkan tampilan...');
-          preloadAudio();
-        }
-      };
-
-      for (let i = 1; i <= TOTAL; i++) {
-        const img = new Image();
-        img.decoding = 'async';
-        const src = `kuara-${i}.jpg`;
-
-        const complete = () => {
-          // decode() memastikan gambar benar-benar siap render
-          if (img.decode) {
-            img.decode().then(done).catch(done);
-          } else {
-            done();
-          }
-        };
-
-        img.onload = complete;
-        img.onerror = complete;
-        img.src = src;
-      }
-    }
-
-    // ---------- 3. AUDIO ----------
-    function preloadAudio() {
-      setProgress(88, 'Memuat musik...');
-
-      const audio = bgMusic;
-      let audioDone = false;
-
-      const audioFinish = () => {
-        if (audioDone) return;
-        audioDone = true;
-        setProgress(97, 'Menyiapkan animasi...');
-        warmUp();
-      };
-
-      // Kalau audio sudah ready
-      if (audio.readyState >= 3) {
-        audioFinish();
-        return;
-      }
-
-      audio.addEventListener('canplaythrough', audioFinish, { once: true });
-      audio.addEventListener('loadeddata', audioFinish, { once: true });
-      audio.addEventListener('error', audioFinish, { once: true });
-
-      // timeout audio: 4 detik
-      setTimeout(audioFinish, 4000);
-
-      try { audio.load(); } catch (e) {}
-    }
-
-    // ---------- 4. WARM-UP RENDER ----------
-    function warmUp() {
-      setProgress(98, 'Hampir siap...');
-
-      // paksa browser render dulu, supaya frame pertama animasi tidak lag
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          setProgress(100, 'Siap!');
-          clearTimeout(failsafe);
-          finish();
-        });
-      });
-    }
-  }
-
   // ===== MULAI PRELOAD =====
-  preloadAll();
+  preloadPhotos();
 
 })();
 </script>
