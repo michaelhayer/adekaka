@@ -517,6 +517,23 @@
     text-shadow: 0 0 15px #0cf;
   }
 
+  /* progress bar tipis di bawah persen */
+  #load-bar {
+    width: 220px;
+    height: 4px;
+    background: rgba(0, 200, 255, 0.15);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 18px;
+  }
+  #load-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #06b6d4, #10b981);
+    box-shadow: 0 0 12px rgba(6, 182, 212, 0.9);
+    transition: width 0.2s ease;
+  }
+
   @media (max-width: 768px) {
     .photo {
       width: 320px;
@@ -568,6 +585,7 @@
     #loading p { font-size: 11px; letter-spacing: 3px; }
     #load-percent { font-size: 24px; }
     .loader-ring { width: 60px; height: 60px; }
+    #load-bar { width: 180px; }
   }
 
   @media (max-width: 360px) {
@@ -644,7 +662,8 @@
 <div id="loading">
   <div class="loader-ring"></div>
   <div id="load-percent">0%</div>
-  <p>Memuat Foto</p>
+  <div id="load-bar"><div id="load-bar-fill"></div></div>
+  <p id="load-status">Menyiapkan...</p>
 </div>
 
 <script>
@@ -671,14 +690,25 @@
   const world = $('world');
   const loading = $('loading');
   const loadPercent = $('load-percent');
+  const loadBarFill = $('load-bar-fill');
+  const loadStatus = $('load-status');
   const replayBtn = $('replay');
 
   const state = {
     photos: [],
     animationId: null,
     startTime: 0,
-    isAnimating: false
+    isAnimating: false,
+    ready: false
   };
+
+  // ===== PROGRESS =====
+  function setProgress(pct, statusText) {
+    const p = Math.max(0, Math.min(100, Math.round(pct)));
+    loadPercent.textContent = p + '%';
+    loadBarFill.style.width = p + '%';
+    if (statusText) loadStatus.textContent = statusText;
+  }
 
   // ===== SHUFFLE =====
   function shuffleArray(arr) {
@@ -702,7 +732,9 @@
     img.alt = `Foto ${i + 1}`;
     img.loading = 'eager';
     img.decoding = 'async';
-    img.src = `kuara-${i + 1}.jpg`;
+    // penting: jangan set src dulu sebelum preload selesai
+    // supaya tidak ada placeholder flash
+    img.dataset.src = `kuara-${i + 1}.jpg`;
 
     div.appendChild(img);
     world.appendChild(div);
@@ -727,7 +759,6 @@
   });
 
   // ===== SHUFFLE FOTO =====
-  // FIX: benar-benar acak setiap kali dipanggil (sebelumnya pakai array statis)
   function shufflePhotos() {
     const order = shuffleArray(photoNumbers);
     state.photos.forEach((p, i) => {
@@ -739,40 +770,6 @@
         p.img.style.opacity = '1';
       }, 150);
     });
-  }
-
-  // ===== PRELOAD =====
-  // FIX: hindari "gantung" jika ada gambar gagal dimuat — tetap lanjut
-  function preloadPhotos() {
-    let loaded = 0;
-    let finished = false;
-
-    const finish = () => {
-      if (finished) return;
-      finished = true;
-      loading.classList.add('hide');
-      shufflePhotos();
-      setTimeout(startAnimation, 400);
-    };
-
-    // Failsafe: kalau 8 detik belum selesai, paksa lanjut
-    const failsafe = setTimeout(finish, 8000);
-
-    for (let i = 1; i <= TOTAL; i++) {
-      const img = new Image();
-      const done = () => {
-        loaded++;
-        const pct = Math.round((loaded / TOTAL) * 100);
-        loadPercent.textContent = pct + '%';
-        if (loaded === TOTAL) {
-          clearTimeout(failsafe);
-          setTimeout(finish, 300);
-        }
-      };
-      img.onload = done;
-      img.onerror = done;
-      img.src = `kuara-${i}.jpg`;
-    }
   }
 
   // ===== GARIS LORONG =====
@@ -812,7 +809,6 @@
   }
 
   // ===== ANIMASI =====
-  // FIX: startTime di-reset hanya sekali di startAnimation, tidak di animate
   function animate(timestamp) {
     if (!state.startTime) state.startTime = timestamp;
     const elapsed = timestamp - state.startTime;
@@ -834,7 +830,6 @@
     replayBtn.classList.remove('show');
     state.startTime = 0;
     state.isAnimating = true;
-    // FIX: langsung set posisi awal yang benar, jangan reset ke 0
     world.style.transform = `translateZ(${CONFIG.cameraStartZ}px)`;
     state.animationId = requestAnimationFrame(animate);
   }
@@ -853,8 +848,6 @@
   const bgMusic = document.getElementById('bgMusic');
   const musicIcon = musicBtn.querySelector('.music-icon');
   let musicPlaying = false;
-
-  // FIX: Gyro request dipindah ke interaksi user (klik musik) untuk iOS
   let gyroRequested = false;
 
   musicBtn.addEventListener('click', () => {
@@ -875,7 +868,6 @@
       }).catch(err => console.warn('Autoplay diblokir:', err));
     }
 
-    // Minta izin gyro saat interaksi pertama (khusus iOS)
     if (!gyroRequested) {
       gyroRequested = true;
       enableGyro();
@@ -951,7 +943,6 @@
     const outline = buildOutlineParticles(nOutline);
     const fill = buildFillParticles(nFill);
 
-    // FIX: fallback jika outline kosong
     const outlineSpan = outline.length
       ? Math.max(...outline.map(p => p.order))
       : 0;
@@ -984,7 +975,6 @@
 
   initLoveField();
 
-  // FIX: resize listener dengan debounce & rebuild aman
   let resizeTimer;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
@@ -994,7 +984,6 @@
   // =================================================================
   // 📱 GYROSCOPE PARALLAX
   // =================================================================
-  // FIX: cache elemen DOM, jangan querySelect tiap frame
   const parallaxLayers = [
     { el: document.querySelector('.stars-tiny'),   depth: 6  },
     { el: document.querySelector('.stars-small'),  depth: 10 },
@@ -1036,7 +1025,6 @@
           gyroEnabled = true;
         }
       } catch (err) {
-        // fallback ke mouse
         window.addEventListener('mousemove', handleMouseMove);
       }
     } else {
@@ -1045,7 +1033,6 @@
     }
   }
 
-  // Desktop / mouse fallback
   if (!isMobileDevice) {
     window.addEventListener('mousemove', handleMouseMove);
   }
@@ -1071,8 +1058,154 @@
 
   animateParallax();
 
-  // ===== MULAI =====
-  preloadPhotos();
+  // =================================================================
+  // 🚀 PRELOAD SEMUA ASET LALU JALANKAN
+  // =================================================================
+  // Tahapan:
+  //   1. Font siap ............................. 0%  - 10%
+  //   2. Foto 1..22 di-preload + decode ........ 10% - 85%
+  //   3. Isi src semua <img> yang sudah ada .... 85% - 92%
+  //   4. Audio siap ............................ 92% - 97%
+  //   5. Warm-up render 2 frame ................ 97% - 100%
+  //   6. Baru jalankan animasi + shuffle foto
+  // =================================================================
+  function preloadAll() {
+    let finished = false;
+
+    const finish = () => {
+      if (finished) return;
+      finished = true;
+
+      setProgress(100, 'Siap!');
+
+      // sedikit delay supaya progress 100% terlihat
+      setTimeout(() => {
+        loading.classList.add('hide');
+
+        // Pasang src sebenarnya ke semua <img> di DOM
+        // (sebelumnya hanya di dataset, jadi tidak ada flash placeholder)
+        state.photos.forEach(p => {
+          p.img.src = p.img.dataset.src;
+        });
+
+        // Tunggu 2 frame render supaya layout stabil
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            shufflePhotos();
+            setTimeout(() => {
+              startAnimation();
+              state.ready = true;
+            }, 400);
+          });
+        });
+      }, 350);
+    };
+
+    // Failsafe total: 20 detik
+    const failsafe = setTimeout(() => {
+      console.warn('Failsafe: memaksa start setelah 20 detik');
+      finish();
+    }, 20000);
+
+    // ---------- 1. FONT ----------
+    setProgress(2, 'Memuat font...');
+
+    const fontPromise = (document.fonts && document.fonts.ready)
+      ? document.fonts.ready
+      : Promise.resolve();
+
+    fontPromise.then(() => {
+      setProgress(10, 'Font siap. Memuat foto...');
+      preloadImages();
+    }).catch(() => {
+      setProgress(10, 'Font dilewati. Memuat foto...');
+      preloadImages();
+    });
+
+    // ---------- 2. FOTO ----------
+    function preloadImages() {
+      let loaded = 0;
+      const startPct = 10;
+      const endPct = 85;
+      const span = endPct - startPct;
+
+      const done = () => {
+        loaded++;
+        const pct = startPct + (loaded / TOTAL) * span;
+        setProgress(pct, `Memuat foto ${loaded}/${TOTAL}...`);
+        if (loaded === TOTAL) {
+          setProgress(85, 'Semua foto siap. Menyiapkan tampilan...');
+          preloadAudio();
+        }
+      };
+
+      for (let i = 1; i <= TOTAL; i++) {
+        const img = new Image();
+        img.decoding = 'async';
+        const src = `kuara-${i}.jpg`;
+
+        const complete = () => {
+          // decode() memastikan gambar benar-benar siap render
+          if (img.decode) {
+            img.decode().then(done).catch(done);
+          } else {
+            done();
+          }
+        };
+
+        img.onload = complete;
+        img.onerror = complete;
+        img.src = src;
+      }
+    }
+
+    // ---------- 3. AUDIO ----------
+    function preloadAudio() {
+      setProgress(88, 'Memuat musik...');
+
+      const audio = bgMusic;
+      let audioDone = false;
+
+      const audioFinish = () => {
+        if (audioDone) return;
+        audioDone = true;
+        setProgress(97, 'Menyiapkan animasi...');
+        warmUp();
+      };
+
+      // Kalau audio sudah ready
+      if (audio.readyState >= 3) {
+        audioFinish();
+        return;
+      }
+
+      audio.addEventListener('canplaythrough', audioFinish, { once: true });
+      audio.addEventListener('loadeddata', audioFinish, { once: true });
+      audio.addEventListener('error', audioFinish, { once: true });
+
+      // timeout audio: 4 detik
+      setTimeout(audioFinish, 4000);
+
+      try { audio.load(); } catch (e) {}
+    }
+
+    // ---------- 4. WARM-UP RENDER ----------
+    function warmUp() {
+      setProgress(98, 'Hampir siap...');
+
+      // paksa browser render dulu, supaya frame pertama animasi tidak lag
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setProgress(100, 'Siap!');
+          clearTimeout(failsafe);
+          finish();
+        });
+      });
+    }
+  }
+
+  // ===== MULAI PRELOAD =====
+  preloadAll();
 
 })();
 </script>
