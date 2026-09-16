@@ -29,7 +29,7 @@
   #scene {
     position: fixed;
     inset: 0;
-    perspective: 700px;
+    perspective: 900px;
     perspective-origin: 50% 50%;
     overflow: hidden;
     z-index: 10;
@@ -49,16 +49,16 @@
   /* Setiap foto = plane di dinding lorong — UKURAN LEBIH BESAR */
   .photo {
     position: absolute;
-    width: 320px;
-    height: 400px;
-    margin-left: -160px;
-    margin-top: -200px;
-    border-radius: 8px;
+    width: 420px;
+    height: 525px;
+    margin-left: -210px;
+    margin-top: -262px;
+    border-radius: 10px;
     overflow: hidden;
-    border: 3px solid rgba(0, 200, 255, 0.7);
+    border: 4px solid rgba(0, 200, 255, 0.7);
     box-shadow:
-      0 0 25px rgba(0, 200, 255, 0.6),
-      0 0 60px rgba(0, 200, 255, 0.3);
+      0 0 30px rgba(0, 200, 255, 0.6),
+      0 0 70px rgba(0, 200, 255, 0.3);
     backface-visibility: hidden;
     will-change: transform, opacity;
     background: #001a2e;
@@ -538,29 +538,48 @@
   }
 
   /* ===================================================== */
-  /* ====== RESPONSIVE =================================== */
+  /* ====== RESPONSIVE — MOBILE OPTIMIZED ================ */
   /* ===================================================== */
+
+  /* Tablet */
   @media (max-width: 768px) {
     .photo {
-      width: 180px;
-      height: 225px;
-      margin-left: -90px;
-      margin-top: -112px;
+      width: 300px;
+      height: 375px;
+      margin-left: -150px;
+      margin-top: -187px;
+      border-width: 3px;
     }
-    #scene { perspective: 500px; }
+    #scene { perspective: 700px; }
 
     #titleOverlay { top: 18px; }
     #titleOverlay .title-pill { padding: 10px 24px; border-radius: 40px; }
-    #titleOverlay h1 { font-size: 1.1rem; letter-spacing: 2px; }
+    #titleOverlay h1 { font-size: 1.2rem; letter-spacing: 2px; }
   }
 
+  /* HP / Mobile */
   @media (max-width: 480px) {
     .photo {
-      width: 150px;
-      height: 188px;
-      margin-left: -75px;
-      margin-top: -94px;
+      width: 240px;
+      height: 300px;
+      margin-left: -120px;
+      margin-top: -150px;
+      border-width: 3px;
+      border-radius: 8px;
     }
+    #scene { perspective: 600px; }
+
+    #titleOverlay { top: 14px; }
+    #titleOverlay .title-pill {
+      padding: 8px 18px;
+      border-radius: 30px;
+    }
+    #titleOverlay h1 {
+      font-size: 1rem;
+      letter-spacing: 1.5px;
+      white-space: normal;
+    }
+
     #musicBtn {
       width: 46px; height: 46px;
       bottom: 15px; left: 15px;
@@ -571,10 +590,31 @@
       font-size: 0.75rem;
       bottom: 15px; right: 15px;
     }
+  }
 
-    #titleOverlay { top: 14px; }
-    #titleOverlay .title-pill { padding: 8px 18px; border-radius: 30px; }
-    #titleOverlay h1 { font-size: 0.9rem; letter-spacing: 1.5px; }
+  /* HP sangat kecil */
+  @media (max-width: 360px) {
+    .photo {
+      width: 200px;
+      height: 250px;
+      margin-left: -100px;
+      margin-top: -125px;
+    }
+    #titleOverlay h1 { font-size: 0.85rem; letter-spacing: 1px; }
+  }
+
+  /* Orientasi landscape di HP */
+  @media (max-width: 900px) and (orientation: landscape) {
+    .photo {
+      width: 220px;
+      height: 275px;
+      margin-left: -110px;
+      margin-top: -137px;
+    }
+    #scene { perspective: 600px; }
+    #titleOverlay { top: 10px; }
+    #titleOverlay h1 { font-size: 0.9rem; }
+    #titleOverlay .title-pill { padding: 6px 16px; }
   }
 
   @supports (padding: env(safe-area-inset-bottom)) {
@@ -646,15 +686,15 @@
 
   // ===== KONFIGURASI LORONG =====
   const CONFIG = {
-    spacing: 700,
+    spacing: 800,
     get totalDistance() { return this.spacing * TOTAL; },
     // KECEPATAN KAMERA LEBIH PELAN (45 detik)
     duration: 45000,
     cameraStartZ: 600,
-    corridorHalfWidth: 320,
+    corridorHalfWidth: 360,
     photoY: 0,
-    // Sudut foto lebih menghadap kamera (bukan 90 derajat penuh)
-    photoAngle: 35
+    // Sudut foto lebih menghadap kamera
+    photoAngle: 30
   };
 
   // ===== DOM =====
@@ -709,7 +749,7 @@
     const z = -i * CONFIG.spacing;
     const x = side * CONFIG.corridorHalfWidth;
     const y = CONFIG.photoY;
-    // FOTO LEBIH MENGHADAP KAMERA — sudut lebih kecil dari 90°
+    // FOTO LEBIH MENGHADAP KAMERA — sudut lebih kecil
     const rotY = side === -1 ? CONFIG.photoAngle : -CONFIG.photoAngle;
 
     state.photos.push({
@@ -779,7 +819,7 @@
   floorGroup.className = 'corridor';
   world.appendChild(floorGroup);
 
-  const floorY = 180;
+  const floorY = 200;
   for (let i = 0; i < TOTAL + 10; i++) {
     const line = document.createElement('div');
     line.className = 'floor-line';
@@ -792,18 +832,18 @@
     const lineL = document.createElement('div');
     lineL.className = 'wall-line';
     lineL.style.width = '2px';
-    lineL.style.height = '400px';
+    lineL.style.height = '500px';
     lineL.style.left = -CONFIG.corridorHalfWidth + 'px';
-    lineL.style.top = (-200 + floorY) + 'px';
+    lineL.style.top = (-250 + floorY) + 'px';
     lineL.style.transform = `translateZ(${-i * CONFIG.spacing}px)`;
     floorGroup.appendChild(lineL);
 
     const lineR = document.createElement('div');
     lineR.className = 'wall-line';
     lineR.style.width = '2px';
-    lineR.style.height = '400px';
+    lineR.style.height = '500px';
     lineR.style.left = CONFIG.corridorHalfWidth + 'px';
-    lineR.style.top = (-200 + floorY) + 'px';
+    lineR.style.top = (-250 + floorY) + 'px';
     lineR.style.transform = `translateZ(${-i * CONFIG.spacing}px)`;
     floorGroup.appendChild(lineR);
   }
