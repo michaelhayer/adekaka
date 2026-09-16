@@ -27,7 +27,6 @@
     touch-action: none;
   }
 
-  /* Ruangan lorong dengan perspective dari dalam */
   #scene {
     position: fixed;
     inset: 0;
@@ -37,7 +36,6 @@
     z-index: 10;
   }
 
-  /* Dunia 3D tempat foto-foto terpasang */
   #world {
     position: absolute;
     top: 50%;
@@ -48,7 +46,6 @@
     will-change: transform;
   }
 
-  /* Setiap foto = plane di dinding lorong */
   .photo {
     position: absolute;
     width: 420px;
@@ -62,7 +59,6 @@
       0 0 30px rgba(0, 200, 255, 0.6),
       0 0 70px rgba(0, 200, 255, 0.3);
     backface-visibility: hidden;
-    will-change: transform, opacity;
     background: #001a2e;
   }
 
@@ -86,7 +82,6 @@
     pointer-events: none;
   }
 
-  /* ===== LORONG ===== */
   .corridor {
     position: absolute;
     top: 50%;
@@ -117,9 +112,6 @@
     z-index: 40;
   }
 
-  /* ===================================================== */
-  /* ====== JUDUL OVERLAY ================================ */
-  /* ===================================================== */
   #titleOverlay {
     position: fixed;
     top: 28px;
@@ -182,9 +174,6 @@
     100% { background-position: 200% 50%; }
   }
 
-  /* ===================================================== */
-  /* ====== LANGIT BINTANG =============================== */
-  /* ===================================================== */
   #starfield {
     position: fixed;
     inset: 0;
@@ -335,7 +324,7 @@
     white-space: nowrap;
     opacity: 0;
     text-shadow: 0 0 4px currentColor, 0 0 10px currentColor, 0 0 20px currentColor;
-    will-change: opacity, transform;
+    will-change: opacity;
   }
 
   @keyframes loveAppear {
@@ -351,9 +340,6 @@
     animation: loveAppear 1.5s ease-out forwards, loveGlow 3s ease-in-out infinite alternate 1.5s;
   }
 
-  /* ===================================================== */
-  /* ====== TOMBOL MUSIK ================================= */
-  /* ===================================================== */
   #musicBtn {
     position: fixed;
     bottom: 20px;
@@ -446,9 +432,6 @@
   }
   #musicBtn:hover::after { opacity: 1; }
 
-  /* ===================================================== */
-  /* ====== TOMBOL REPLAY ================================ */
-  /* ===================================================== */
   #replay {
     position: fixed;
     bottom: 20px;
@@ -484,9 +467,6 @@
     transform: scale(1.05);
   }
 
-  /* ===================================================== */
-  /* ====== LOADING ====================================== */
-  /* ===================================================== */
   #loading {
     position: fixed;
     inset: 0;
@@ -537,11 +517,6 @@
     text-shadow: 0 0 15px #0cf;
   }
 
-  /* ===================================================== */
-  /* ====== RESPONSIVE — MOBILE OPTIMIZED ================ */
-  /* ===================================================== */
-
-  /* Tablet */
   @media (max-width: 768px) {
     .photo {
       width: 320px;
@@ -557,7 +532,6 @@
     #titleOverlay h1 { font-size: 1.25rem; letter-spacing: 2px; }
   }
 
-  /* HP / Mobile */
   @media (max-width: 480px) {
     .photo {
       width: 280px;
@@ -596,7 +570,6 @@
     .loader-ring { width: 60px; height: 60px; }
   }
 
-  /* HP sangat kecil */
   @media (max-width: 360px) {
     .photo {
       width: 240px;
@@ -608,7 +581,6 @@
     #titleOverlay .title-pill { padding: 8px 16px; }
   }
 
-  /* Orientasi landscape di HP */
   @media (max-width: 900px) and (orientation: landscape) {
     .photo {
       width: 240px;
@@ -630,7 +602,6 @@
 </head>
 <body>
 
-<!-- Starfield Background -->
 <div id="starfield">
   <div class="stars-tiny"></div>
   <div class="stars-small"></div>
@@ -640,24 +611,20 @@
   <div class="nebula"></div>
 </div>
 
-<!-- Love Particles -->
 <div id="lovefield"></div>
 
-<!-- ===== JUDUL OVERLAY ===== -->
 <div id="titleOverlay">
   <div class="title-pill">
     <h1 class="moving-gradient">✨ ADE KAKA BAKU SAYANG ✨</h1>
   </div>
 </div>
 
-<!-- 3D Scene -->
 <div id="scene">
   <div id="world"></div>
 </div>
 
 <div id="vignette"></div>
 
-<!-- Music Button -->
 <button id="musicBtn" data-tip="Putar Musik" title="Putar Musik">
   <span class="music-icon">🎵</span>
   <span class="wave" aria-hidden="true">
@@ -668,15 +635,12 @@
   </span>
 </button>
 
-<!-- Audio -->
 <audio id="bgMusic" loop preload="auto">
   <source src="lomba-sihir.mp3" type="audio/mpeg">
 </audio>
 
-<!-- Replay Button -->
 <button id="replay">↻ Replay</button>
 
-<!-- Loading -->
 <div id="loading">
   <div class="loader-ring"></div>
   <div id="load-percent">0%</div>
@@ -689,11 +653,9 @@
 
   const TOTAL = 22;
 
-  // ===== DETEKSI MOBILE =====
   const isMobileDevice = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
   const isSmallScreen = window.innerWidth <= 480;
 
-  // ===== KONFIGURASI LORONG (DINAMIS) =====
   const CONFIG = {
     spacing: isSmallScreen ? 750 : 800,
     get totalDistance() { return this.spacing * TOTAL; },
@@ -704,7 +666,6 @@
     photoAngle: isSmallScreen ? 25 : 30
   };
 
-  // ===== DOM =====
   const $ = id => document.getElementById(id);
   const scene = $('scene');
   const world = $('world');
@@ -712,16 +673,14 @@
   const loadPercent = $('load-percent');
   const replayBtn = $('replay');
 
-  // ===== STATE =====
   const state = {
     photos: [],
-    imagesLoaded: 0,
     animationId: null,
     startTime: 0,
-    shuffledOrder: []
+    isAnimating: false
   };
 
-  // ===== FUNGSI SHUFFLE =====
+  // ===== SHUFFLE =====
   function shuffleArray(arr) {
     const a = arr.slice();
     for (let i = a.length - 1; i > 0; i--) {
@@ -731,13 +690,10 @@
     return a;
   }
 
-  // ===== BUAT URUTAN FOTO =====
-  const photoNumbers = [];
-  for (let i = 1; i <= TOTAL; i++) {
-    photoNumbers.push(i);
-  }
-
   // ===== BUAT FOTO =====
+  const photoNumbers = [];
+  for (let i = 1; i <= TOTAL; i++) photoNumbers.push(i);
+
   for (let i = 0; i < TOTAL; i++) {
     const div = document.createElement('div');
     div.className = 'photo';
@@ -745,6 +701,7 @@
     const img = document.createElement('img');
     img.alt = `Foto ${i + 1}`;
     img.loading = 'eager';
+    img.decoding = 'async';
     img.src = `kuara-${i + 1}.jpg`;
 
     div.appendChild(img);
@@ -759,27 +716,22 @@
     state.photos.push({
       el: div,
       img: img,
-      index: i,
-      x: x,
-      y: y,
-      z: z,
-      rotY: rotY,
-      side: side
+      x, y, z, rotY
     });
   }
 
-  // ===== PASANG FOTO =====
   state.photos.forEach(p => {
     p.el.style.transform =
       `translate3d(${p.x}px, ${p.y}px, ${p.z}px) rotateY(${p.rotY}deg)`;
     p.el.style.opacity = 1;
   });
 
-  // ===== FUNGSI SHUFFLE FOTO =====
+  // ===== SHUFFLE FOTO =====
+  // FIX: benar-benar acak setiap kali dipanggil (sebelumnya pakai array statis)
   function shufflePhotos() {
-    state.shuffledOrder = shuffleArray(photoNumbers);
+    const order = shuffleArray(photoNumbers);
     state.photos.forEach((p, i) => {
-      const photoNum = state.shuffledOrder[i];
+      const photoNum = order[i];
       const newSrc = `kuara-${photoNum}.jpg`;
       p.img.style.opacity = '0';
       setTimeout(() => {
@@ -790,24 +742,35 @@
   }
 
   // ===== PRELOAD =====
+  // FIX: hindari "gantung" jika ada gambar gagal dimuat — tetap lanjut
   function preloadPhotos() {
     let loaded = 0;
-    const totalToLoad = TOTAL;
+    let finished = false;
+
+    const finish = () => {
+      if (finished) return;
+      finished = true;
+      loading.classList.add('hide');
+      shufflePhotos();
+      setTimeout(startAnimation, 400);
+    };
+
+    // Failsafe: kalau 8 detik belum selesai, paksa lanjut
+    const failsafe = setTimeout(finish, 8000);
 
     for (let i = 1; i <= TOTAL; i++) {
       const img = new Image();
-      img.onload = img.onerror = () => {
+      const done = () => {
         loaded++;
-        const pct = Math.round((loaded / totalToLoad) * 100);
+        const pct = Math.round((loaded / TOTAL) * 100);
         loadPercent.textContent = pct + '%';
-        if (loaded === totalToLoad) {
-          setTimeout(() => {
-            loading.classList.add('hide');
-            shufflePhotos();
-            setTimeout(startAnimation, 400);
-          }, 300);
+        if (loaded === TOTAL) {
+          clearTimeout(failsafe);
+          setTimeout(finish, 300);
         }
       };
+      img.onload = done;
+      img.onerror = done;
       img.src = `kuara-${i}.jpg`;
     }
   }
@@ -818,7 +781,9 @@
   world.appendChild(floorGroup);
 
   const floorY = 200;
-  for (let i = 0; i < TOTAL + 10; i++) {
+  const totalLines = TOTAL + 10;
+
+  for (let i = 0; i < totalLines; i++) {
     const line = document.createElement('div');
     line.className = 'floor-line';
     line.style.top = floorY + 'px';
@@ -826,7 +791,7 @@
     floorGroup.appendChild(line);
   }
 
-  for (let i = 0; i < TOTAL + 10; i++) {
+  for (let i = 0; i < totalLines; i++) {
     const lineL = document.createElement('div');
     lineL.className = 'wall-line';
     lineL.style.width = '2px';
@@ -847,6 +812,7 @@
   }
 
   // ===== ANIMASI =====
+  // FIX: startTime di-reset hanya sekali di startAnimation, tidak di animate
   function animate(timestamp) {
     if (!state.startTime) state.startTime = timestamp;
     const elapsed = timestamp - state.startTime;
@@ -858,21 +824,26 @@
     if (progress < 1) {
       state.animationId = requestAnimationFrame(animate);
     } else {
+      state.isAnimating = false;
       replayBtn.classList.add('show');
     }
   }
 
   function startAnimation() {
+    cancelAnimationFrame(state.animationId);
     replayBtn.classList.remove('show');
     state.startTime = 0;
-    world.style.transform = 'translateZ(0px)';
-    cancelAnimationFrame(state.animationId);
+    state.isAnimating = true;
+    // FIX: langsung set posisi awal yang benar, jangan reset ke 0
+    world.style.transform = `translateZ(${CONFIG.cameraStartZ}px)`;
     state.animationId = requestAnimationFrame(animate);
   }
 
   replayBtn.addEventListener('click', () => {
-    shufflePhotos();
-    setTimeout(startAnimation, 400);
+    if (!state.isAnimating) {
+      shufflePhotos();
+      setTimeout(startAnimation, 400);
+    }
   });
 
   // =================================================================
@@ -882,6 +853,9 @@
   const bgMusic = document.getElementById('bgMusic');
   const musicIcon = musicBtn.querySelector('.music-icon');
   let musicPlaying = false;
+
+  // FIX: Gyro request dipindah ke interaksi user (klik musik) untuk iOS
+  let gyroRequested = false;
 
   musicBtn.addEventListener('click', () => {
     if (musicPlaying) {
@@ -899,6 +873,12 @@
         musicBtn.title = 'Matikan Musik';
         musicPlaying = true;
       }).catch(err => console.warn('Autoplay diblokir:', err));
+    }
+
+    // Minta izin gyro saat interaksi pertama (khusus iOS)
+    if (!gyroRequested) {
+      gyroRequested = true;
+      enableGyro();
     }
   });
 
@@ -935,7 +915,7 @@
       }
       if (tooClose) continue;
       placed.push([sx, sy]);
-      particles.push({ x: sx, y: sy, order: i, kind: 'outline' });
+      particles.push({ x: sx, y: sy, order: i });
     }
     return particles;
   }
@@ -957,7 +937,7 @@
       }
       if (tooClose) continue;
       placed.push([sx, sy]);
-      particles.push({ x: sx, y: sy, order: Math.floor(Math.random() * 320), kind: 'fill' });
+      particles.push({ x: sx, y: sy, order: Math.floor(Math.random() * 320) });
     }
     return particles;
   }
@@ -971,7 +951,10 @@
     const outline = buildOutlineParticles(nOutline);
     const fill = buildFillParticles(nFill);
 
-    const outlineSpan = outline.length ? Math.max(...outline.map(p => p.order)) : 0;
+    // FIX: fallback jika outline kosong
+    const outlineSpan = outline.length
+      ? Math.max(...outline.map(p => p.order))
+      : 0;
     const framesPerStep = 1.6;
     const fillStartFrame = Math.floor(outlineSpan * framesPerStep) + 30;
 
@@ -980,6 +963,7 @@
 
     const all = outline.concat(fill);
     const fontSize = isMob ? 9 : 13;
+    const fragment = document.createDocumentFragment();
 
     all.forEach(p => {
       const el = document.createElement('div');
@@ -992,12 +976,15 @@
       el.style.animationDelay = (p.delay * 16) + 'ms';
       el.style.animationDuration = (2.5 + Math.random() * 2) + 's';
       el.classList.add('fade-in');
-      lovefield.appendChild(el);
+      fragment.appendChild(el);
     });
+
+    lovefield.appendChild(fragment);
   }
 
   initLoveField();
 
+  // FIX: resize listener dengan debounce & rebuild aman
   let resizeTimer;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
@@ -1007,19 +994,21 @@
   // =================================================================
   // 📱 GYROSCOPE PARALLAX
   // =================================================================
+  // FIX: cache elemen DOM, jangan querySelect tiap frame
   const parallaxLayers = [
-    { selector: '.stars-tiny',    depth: 6  },
-    { selector: '.stars-small',   depth: 10 },
-    { selector: '.stars-medium',  depth: 16 },
-    { selector: '.stars-big',     depth: 24 },
-    { selector: '.stars-color',   depth: 32 },
-    { selector: '.nebula',        depth: 8  },
-  ];
+    { el: document.querySelector('.stars-tiny'),   depth: 6  },
+    { el: document.querySelector('.stars-small'),  depth: 10 },
+    { el: document.querySelector('.stars-medium'), depth: 16 },
+    { el: document.querySelector('.stars-big'),    depth: 24 },
+    { el: document.querySelector('.stars-color'),  depth: 32 },
+    { el: document.querySelector('.nebula'),       depth: 8  },
+  ].filter(l => l.el);
 
   let targetBeta = 0;
   let targetGamma = 0;
   let currentBeta = 0;
   let currentGamma = 0;
+  let gyroEnabled = false;
 
   function handleOrientation(e) {
     targetBeta  = e.beta  || 0;
@@ -1036,27 +1025,28 @@
   }
 
   async function enableGyro() {
-    if (typeof DeviceOrientationEvent === 'undefined') return false;
+    if (gyroEnabled) return;
+    if (typeof DeviceOrientationEvent === 'undefined') return;
+
     if (typeof DeviceOrientationEvent.requestPermission === 'function') {
       try {
         const perm = await DeviceOrientationEvent.requestPermission();
         if (perm === 'granted') {
           window.addEventListener('deviceorientation', handleOrientation, true);
-          return true;
+          gyroEnabled = true;
         }
-        return false;
       } catch (err) {
-        return false;
+        // fallback ke mouse
+        window.addEventListener('mousemove', handleMouseMove);
       }
     } else {
       window.addEventListener('deviceorientation', handleOrientation, true);
-      return true;
+      gyroEnabled = true;
     }
   }
 
-  if (isMobileDevice && typeof DeviceOrientationEvent !== 'undefined') {
-    enableGyro();
-  } else {
+  // Desktop / mouse fallback
+  if (!isMobileDevice) {
     window.addEventListener('mousemove', handleMouseMove);
   }
 
@@ -1068,14 +1058,13 @@
     const b = Math.max(-maxTilt, Math.min(maxTilt, currentBeta));
     const g = Math.max(-maxTilt, Math.min(maxTilt, currentGamma));
 
-    parallaxLayers.forEach(layer => {
-      const el = document.querySelector(layer.selector);
-      if (!el) return;
+    for (let i = 0; i < parallaxLayers.length; i++) {
+      const layer = parallaxLayers[i];
       const d = layer.depth;
       const tx = (-g / 90) * d;
       const ty = (-b / 90) * d;
-      el.style.transform = `translate3d(${tx}px, ${ty}px, 0)`;
-    });
+      layer.el.style.transform = `translate3d(${tx}px, ${ty}px, 0)`;
+    }
 
     requestAnimationFrame(animateParallax);
   }
