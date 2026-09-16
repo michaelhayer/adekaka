@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>3D Camera Tracking - 22 Foto</title>
+<title>3D Camera Tracking - 22 Foto (Looping)</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -544,8 +544,8 @@
   /* Tablet */
   @media (max-width: 768px) {
     .photo {
-      width: 240px;          /* lebih besar dari sebelumnya (180px) */
-      height: 300px;         /* lebih besar dari sebelumnya (225px) */
+      width: 240px;
+      height: 300px;
       margin-left: -120px;
       margin-top: -150px;
     }
@@ -559,8 +559,8 @@
   /* HP */
   @media (max-width: 480px) {
     .photo {
-      width: 200px;          /* lebih besar dari sebelumnya (150px) */
-      height: 250px;         /* lebih besar dari sebelumnya (188px) */
+      width: 200px;
+      height: 250px;
       margin-left: -100px;
       margin-top: -125px;
     }
@@ -684,7 +684,8 @@
     imagesLoaded: 0,
     animationId: null,
     startTime: 0,
-    shuffledOrder: []
+    shuffledOrder: [],
+    loopCount: 0
   };
 
   // ===== FUNGSI SHUFFLE (FISHER-YATES) =====
@@ -821,36 +822,54 @@
     floorGroup.appendChild(lineR);
   }
 
-  // ===== ANIMASI UTAMA =====
+  // =================================================================
+  // 🔄 ANIMASI UTAMA — LOOPING TERUS MENERUS
+  // =================================================================
+  // Total jarak yang ditempuh kamera dalam satu putaran:
+  // dari cameraStartZ sampai ujung lorong + margin
+  const LOOP_DISTANCE = CONFIG.totalDistance + 1000;
+  const START_Z = CONFIG.cameraStartZ;
+
   function animate(timestamp) {
     if (!state.startTime) state.startTime = timestamp;
     const elapsed = timestamp - state.startTime;
-    const progress = Math.min(elapsed / CONFIG.duration, 1);
 
-    const cameraZ = CONFIG.cameraStartZ + progress * (CONFIG.totalDistance + 1000);
+    // Hitung progress dalam satu putaran (0..1)
+    const rawProgress = (elapsed % CONFIG.duration) / CONFIG.duration;
+    // Gunakan easing linear agar pergerakan konstan
+    const cameraZ = START_Z + rawProgress * LOOP_DISTANCE;
+
     world.style.transform = `translateZ(${cameraZ}px)`;
 
-    if (progress < 1) {
-      state.animationId = requestAnimationFrame(animate);
-    } else {
-      replayBtn.classList.add('show');
+    // Deteksi pergantian putaran untuk mengacak ulang foto
+    const currentLoop = Math.floor(elapsed / CONFIG.duration);
+    if (currentLoop > state.loopCount) {
+      state.loopCount = currentLoop;
+      shufflePhotos();
     }
+
+    // Teruskan animasi tanpa henti
+    state.animationId = requestAnimationFrame(animate);
   }
 
   function startAnimation() {
-    replayBtn.classList.remove('show');
     state.startTime = 0;
+    state.loopCount = 0;
     world.style.transform = 'translateZ(0px)';
     cancelAnimationFrame(state.animationId);
     state.animationId = requestAnimationFrame(animate);
   }
 
-  // ===== REPLAY — ACAK ULANG FOTO =====
+  // ===== REPLAY — ACAK ULANG FOTO & RESET ANIMASI =====
   replayBtn.addEventListener('click', () => {
     // Acak ulang foto setiap replay
     shufflePhotos();
-    // Mulai animasi setelah delay singkat
-    setTimeout(startAnimation, 400);
+    // Reset animasi (mulai dari awal)
+    state.startTime = 0;
+    state.loopCount = 0;
+    cancelAnimationFrame(state.animationId);
+    state.animationId = requestAnimationFrame(animate);
+    replayBtn.classList.remove('show');
   });
 
   // =================================================================
