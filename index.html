@@ -540,26 +540,29 @@
   /* ===================================================== */
   /* ====== RESPONSIVE =================================== */
   /* ===================================================== */
+
+  /* Tablet */
   @media (max-width: 768px) {
     .photo {
-      width: 180px;
-      height: 225px;
-      margin-left: -90px;
-      margin-top: -112px;
+      width: 240px;          /* lebih besar dari sebelumnya (180px) */
+      height: 300px;         /* lebih besar dari sebelumnya (225px) */
+      margin-left: -120px;
+      margin-top: -150px;
     }
-    #scene { perspective: 500px; }
+    #scene { perspective: 550px; }
 
     #titleOverlay { top: 18px; }
     #titleOverlay .title-pill { padding: 10px 24px; border-radius: 40px; }
     #titleOverlay h1 { font-size: 1.1rem; letter-spacing: 2px; }
   }
 
+  /* HP */
   @media (max-width: 480px) {
     .photo {
-      width: 150px;
-      height: 188px;
-      margin-left: -75px;
-      margin-top: -94px;
+      width: 200px;          /* lebih besar dari sebelumnya (150px) */
+      height: 250px;         /* lebih besar dari sebelumnya (188px) */
+      margin-left: -100px;
+      margin-top: -125px;
     }
     #musicBtn {
       width: 46px; height: 46px;
@@ -575,6 +578,16 @@
     #titleOverlay { top: 14px; }
     #titleOverlay .title-pill { padding: 8px 18px; border-radius: 30px; }
     #titleOverlay h1 { font-size: 0.9rem; letter-spacing: 1.5px; }
+  }
+
+  /* HP sangat kecil */
+  @media (max-width: 360px) {
+    .photo {
+      width: 170px;
+      height: 213px;
+      margin-left: -85px;
+      margin-top: -106px;
+    }
   }
 
   @supports (padding: env(safe-area-inset-bottom)) {
