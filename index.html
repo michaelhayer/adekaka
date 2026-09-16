@@ -120,6 +120,69 @@
   }
 
   /* ===================================================== */
+  /* ====== JUDUL OVERLAY — ADE KAKA BAKU SAYANG ========= */
+  /* ===================================================== */
+  #titleOverlay {
+    position: fixed;
+    top: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    pointer-events: none;
+    text-align: center;
+    animation: titleFadeIn 1.5s ease-out forwards;
+    opacity: 0;
+  }
+
+  @keyframes titleFadeIn {
+    from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+  }
+
+  #titleOverlay .title-pill {
+    display: inline-block;
+    background: rgba(10, 25, 41, 0.55);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 60px;
+    padding: 14px 36px;
+    box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.6),
+                0 0 25px rgba(6, 182, 212, 0.25);
+    max-width: 92vw;
+  }
+
+  #titleOverlay h1 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 900;
+    letter-spacing: 3px;
+    line-height: 1.2;
+    margin: 0;
+    white-space: nowrap;
+  }
+
+  .moving-gradient {
+    background: linear-gradient(90deg, #ffffff, #a5f3fc, #ffffff, #34d399, #ffffff);
+    background-size: 400% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientMove 6s linear infinite;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.4), 0 4px 30px rgba(103, 232, 249, 0.5);
+  }
+
+  @keyframes gradientMove {
+    0%   { background-position: 0% 50%; }
+    100% { background-position: 400% 50%; }
+  }
+
+  @keyframes gradientShift {
+    0%   { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+  }
+
+  /* ===================================================== */
   /* ====== LANGIT BINTANG — 6 LAYER PARALLAX ============ */
   /* ===================================================== */
   #starfield {
@@ -383,11 +446,6 @@
   }
   #musicBtn:hover::after { opacity: 1; }
 
-  @keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    100% { background-position: 200% 50%; }
-  }
-
   /* ===================================================== */
   /* ====== TOMBOL REPLAY ================================ */
   /* ===================================================== */
@@ -490,6 +548,10 @@
       margin-top: -112px;
     }
     #scene { perspective: 500px; }
+
+    #titleOverlay { top: 18px; }
+    #titleOverlay .title-pill { padding: 10px 24px; border-radius: 40px; }
+    #titleOverlay h1 { font-size: 1.1rem; letter-spacing: 2px; }
   }
 
   @media (max-width: 480px) {
@@ -509,6 +571,10 @@
       font-size: 0.75rem;
       bottom: 15px; right: 15px;
     }
+
+    #titleOverlay { top: 14px; }
+    #titleOverlay .title-pill { padding: 8px 18px; border-radius: 30px; }
+    #titleOverlay h1 { font-size: 0.9rem; letter-spacing: 1.5px; }
   }
 
   @supports (padding: env(safe-area-inset-bottom)) {
@@ -531,6 +597,13 @@
 
 <!-- Love Particles -->
 <div id="lovefield"></div>
+
+<!-- ===== JUDUL OVERLAY ===== -->
+<div id="titleOverlay">
+  <div class="title-pill">
+    <h1 class="moving-gradient">✨ ADE KAKA BAKU SAYANG ✨</h1>
+  </div>
+</div>
 
 <!-- 3D Scene -->
 <div id="scene">
